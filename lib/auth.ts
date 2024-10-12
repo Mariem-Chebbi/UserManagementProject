@@ -91,12 +91,17 @@ export const authConfig: NextAuthOptions = {
         }
       }
 
+      const phone = phoneNumbers?.[0]?.value || "";
 
-      const phone = phoneNumbers?.[0]?.value || ""
+      // Ensure user.email is defined
+      if (!user.email) {
+        console.error("User email is not defined.");
+        return false; // Prevent further processing
+      }
 
       // Check if the user exists in the database
       let dbUser = await prisma.user.findUnique({
-        where: { email: user.email },
+        where: { email: user.email }, // user.email is now guaranteed to be a string
       });
 
       if (!dbUser) {
@@ -150,6 +155,6 @@ export async function loginIsRequiredServer() {
   if (typeof window !== "undefined") {
     const session = useSession();
     const router = useRouter();
-    if (!session) router.push("/");
+    if (!session) router.push("/"); 
   }
 } */
