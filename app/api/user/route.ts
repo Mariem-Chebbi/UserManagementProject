@@ -11,7 +11,7 @@ export async function PUT(req: Request) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Ensure userEmail is a string or throw an error if it's null or undefined
+   
     const userEmail = session.user?.email;
 
     if (!userEmail) {

@@ -34,12 +34,12 @@ export const authConfig: NextAuthOptions = {
             const { password, id, ...userWithoutPassword } = dbUser;
             return {
               ...userWithoutPassword,
-              id: id.toString(), // Convert id to string
+              id: id.toString(),
             } as User;
           }
         }
 
-        return null; // Trigger "Access Denied" message for invalid credentials
+        return null;
       }
 
     }),
@@ -59,7 +59,7 @@ export const authConfig: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Request additional user information from Google People API
+
       const res = await fetch(`https://people.googleapis.com/v1/people/me?personFields=names,addresses,birthdays,phoneNumbers`, {
         headers: {
           Authorization: `Bearer ${account?.access_token}`,
@@ -76,15 +76,14 @@ export const authConfig: NextAuthOptions = {
       let birthdate: Date | null = null;
 
       if (birthdays?.[0]?.date) {
-        const birthdateString = birthdays[0].date; // Expecting format YYYY-MM-DD
-        console.log('Birthdate string received:', birthdateString); // Debug log
+        const birthdateString = birthdays[0].date;
+        console.log('Birthdate string received:', birthdateString);
 
-        // Parse birthdateString to Date object if it's a valid string
         if (typeof birthdateString === 'string') {
-          const birthdateParts = birthdateString.split('-'); // Assuming YYYY-MM-DD
-          const year = parseInt(birthdateParts[0], 10); // Convert year to number
-          const month = parseInt(birthdateParts[1], 10) - 1; // Month is zero-indexed
-          const day = parseInt(birthdateParts[2], 10); // Convert day to number
+          const birthdateParts = birthdateString.split('-');
+          const year = parseInt(birthdateParts[0], 10);
+          const month = parseInt(birthdateParts[1], 10) - 1;
+          const day = parseInt(birthdateParts[2], 10);
 
           // Create Date object
           birthdate = new Date(year, month, day);
@@ -96,16 +95,15 @@ export const authConfig: NextAuthOptions = {
       // Ensure user.email is defined
       if (!user.email) {
         console.error("User email is not defined.");
-        return false; // Prevent further processing
+        return false;
       }
 
-      // Check if the user exists in the database
+
       let dbUser = await prisma.user.findUnique({
-        where: { email: user.email }, // user.email is now guaranteed to be a string
+        where: { email: user.email },
       });
 
       if (!dbUser) {
-        // Create a new user with additional Google info
         dbUser = await prisma.user.create({
           data: {
             firstname,
@@ -118,7 +116,6 @@ export const authConfig: NextAuthOptions = {
           },
         });
       } /* else {
-        // Update existing user with new information from Google
         await prisma.user.update({
           where: { email: user.email },
           data: {
