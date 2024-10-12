@@ -131,7 +131,10 @@ export const authConfig: NextAuthOptions = {
       return true;
     },
     async session({ session, token, user }) {
-      session.user.id = token.id;
+      if (session?.user) {
+        // Use type assertion to tell TypeScript that session.user has an id property
+        (session.user as { id: string }).id = token.id as string;
+      }
       return session;
     },
     async jwt({ token, user }) {
