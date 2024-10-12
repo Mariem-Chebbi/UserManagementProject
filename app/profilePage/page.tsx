@@ -10,8 +10,25 @@ export default async function Page() {
 
   const session = await getServerSession(authConfig);
 
+  // Ensure session.user.email is defined
+  const userEmail = session?.user?.email;
+
+  if (!userEmail) {
+    // Handle the case where userEmail is null or undefined
+    return (
+      <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500 py-6">
+        <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-6">
+            Error: User not found
+          </h1>
+          <p className="text-gray-700">User session is not valid.</p>
+        </div>
+      </div>
+    );
+  }
+
   const user = await prisma.user.findUnique({
-    where: { email : session?.user?.email },
+    where: { email: userEmail }, // userEmail is now definitely a string
   });
 
   await wait(1000);
