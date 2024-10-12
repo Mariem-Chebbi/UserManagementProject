@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; 
+import prisma from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 
 export async function POST(req: Request) {
@@ -21,8 +21,8 @@ export async function POST(req: Request) {
                 firstname,
                 lastname,
                 email,
-                password: hashedPassword, 
-                birthdate: new Date(birthdate), 
+                password: hashedPassword,
+                birthdate: new Date(birthdate),
                 address,
                 phone,
             },
@@ -31,6 +31,9 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true, user: newUser }, { status: 200 });
     } catch (error) {
         console.error('Error creating user:', error);
-        return NextResponse.json({ error: 'Error creating user', details: error.message }, { status: 500 });
+
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+        return NextResponse.json({ error: 'Error creating user', details: errorMessage }, { status: 500 });
     }
 }
