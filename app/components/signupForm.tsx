@@ -120,9 +120,9 @@ export const SignupForm = () => {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           required
-          className="mb-2 p-2 border rounded-lg"
+          className="p-2 border rounded-lg"
         />
-        <p className="text-sm text-gray-500">
+        <p className="mb-2 text-sm text-gray-500">
           The address must be within 50 km of Paris.
         </p>
         <input
