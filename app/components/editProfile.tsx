@@ -105,6 +105,7 @@ export const EditProfileForm = ({ user }) => {
         placeholder="Birthdate"
         value={birthdate}
         onChange={(e) => setBirthdate(e.target.value)}
+        max={new Date().toISOString().split("T")[0]}
         required
         className="mb-2 p-2 border rounded-lg"
       />
@@ -116,6 +117,9 @@ export const EditProfileForm = ({ user }) => {
         required
         className="mb-2 p-2 border rounded-lg"
       />
+      <p className="text-sm text-gray-500">
+        The address must be within 50 km of Paris.
+      </p>
       <input
         type="tel"
         placeholder="Phone Number"
